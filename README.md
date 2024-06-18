@@ -49,7 +49,8 @@ Checkout to Purchase (7.50%): There is another substantial drop-off during the c
 
 ## Visualization
 Conversion rates are visualized using bar charts to provide a clear comparison between different stages in the funnel.
-![bar chart of conversion rates](bar chart of conversion rates.png)
+
+![bar chart of conversion rates](https://github.com/GayathriSrujanaManda/E-commerce-Conversion-Funnel-Analysis/blob/main/bar%20chart%20of%20conversion%20rates.png?raw=true)
 
 ## Future Work
 
