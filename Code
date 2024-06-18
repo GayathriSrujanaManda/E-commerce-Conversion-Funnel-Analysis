@@ -1,7 +1,4 @@
-from google.colab import files
-
-# Upload the CSV file from your local machine
-uploaded = files.upload()
+# Load CSV files from the local directory
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
