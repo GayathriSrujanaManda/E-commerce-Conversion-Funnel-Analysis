@@ -1,0 +1,77 @@
+from google.colab import files
+
+# Upload the CSV file from your local machine
+uploaded = files.upload()
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+home_page_df = pd.read_csv("home_page_table.csv")
+payment_confirmation_df = pd.read_csv("payment_confirmation_table.csv")
+payment_page_df = pd.read_csv("payment_page_table.csv")
+search_page_df = pd.read_csv("search_page_table.csv")
+user_df = pd.read_csv("user_table.csv")
+
+# Display the first few rows of each CSV file to understand their structure
+home_page_head = home_page_df.head()
+payment_confirmation_head = payment_confirmation_df.head()
+payment_page_head = payment_page_df.head()
+search_page_head = search_page_df.head()
+user_head = user_df.head()
+print(home_page_head,payment_confirmation_head,payment_page_head, search_page_head, user_head)
+
+# Adding an event column to each dataframe
+home_page_df['event'] = 'homepage_view'
+payment_confirmation_df['event'] = 'purchase'
+payment_page_df['event'] = 'checkout'
+search_page_df['event'] = 'product_view'
+
+# Selecting relevant columns and unifying them into one DataFrame
+home_page_df = home_page_df[['user_id', 'event']]
+payment_confirmation_df = payment_confirmation_df[['user_id', 'event']]
+payment_page_df = payment_page_df[['user_id', 'event']]
+search_page_df = search_page_df[['user_id', 'event']]
+
+# Concatenating all dataframes into a single dataframe
+combined_df = pd.concat([home_page_df, payment_confirmation_df, payment_page_df, search_page_df], ignore_index=True)
+
+# Sorting by user_id to maintain sequence
+combined_df = combined_df.sort_values(by=['user_id', 'event'])
+
+# Define the funnel stages
+funnel_stages = ['homepage_view', 'product_view', 'checkout', 'purchase']
+
+# Calculate the number of users at each stage
+users_at_stage = {stage: combined_df[combined_df['event'] == stage]['user_id'].nunique() for stage in funnel_stages}
+
+# Calculate conversion rates
+conversion_rates = {}
+for i in range(len(funnel_stages) - 1):
+    conversion_rates[f"{funnel_stages[i]}_to_{funnel_stages[i+1]}"] = users_at_stage[funnel_stages[i+1]] / users_at_stage[funnel_stages[i]]
+
+# Display conversion rates
+print(conversion_rates)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Data for visualization
+conversion_rates = pd.DataFrame({
+    'Group': ['Control', 'Variant'],
+    'Conversion Rate': [0.078, 0.072]  # Use the conversion rates from the analysis
+})
+
+# Plotting the conversion rates
+plt.figure(figsize=(10, 6))
+plt.bar(conversion_rates['Group'], conversion_rates['Conversion Rate'], color=['blue', 'green'])
+plt.title('Conversion Rates by Group')
+plt.xlabel('Group')
+plt.ylabel('Conversion Rate')
+plt.ylim(0, max(conversion_rates['Conversion Rate']) + 0.02)
+plt.grid(axis='y')
+
+# Annotating the bars with conversion rate values
+for index, value in enumerate(conversion_rates['Conversion Rate']):
+    plt.text(index, value + 0.001, f"{value:.2%}", ha='center')
+
+# Show the plot
+plt.show()
